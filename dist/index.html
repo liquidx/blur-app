@@ -51,6 +51,24 @@
       <input id="file-selector" type="file" accept="image/*;capture=camera" />
       <img id="offscreen-buffer">
     </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-analytics.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyCzUhpm3kmaxFCKFj3wkjGYJrqh7KCGbDE",
+        authDomain: "blur-quick.firebaseapp.com",
+        projectId: "blur-quick",
+        storageBucket: "blur-quick.appspot.com",
+        messagingSenderId: "941032769017",
+        appId: "1:941032769017:web:8f30ac8345b5027cf6e928"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      window.analytics = firebase.analytics();
+    </script>
   </div>
 </body>
 

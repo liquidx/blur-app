@@ -225,10 +225,16 @@ const actionButtonDidClick = () => {
   switch (STATE.appState) {
     case APP_STATE_INIT: {
       document.querySelector('#file-selector').click();
+      if (window.analytics) {
+        window.analytics.logEvent('load_button_clicked')
+      }
       break;
     }
     case APP_STATE_IMAGE_LOADED: {
       saveImage();
+      if (window.analytics) {
+        window.analytics.logEvent('save_button_clicked')
+      }
       setState(APP_STATE_INIT);
       break;
     }
@@ -242,6 +248,9 @@ const undoButtonDidClick = () => {
     // Reset state.
     // TODO: Make it a real instead of resetting everything.
     loadImage(true);
+    if (window.analytics) {
+      window.analytics.logEvent('undo_button_clicked')
+    }
   }
 }
 
