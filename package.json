@@ -1,0 +1,29 @@
+{
+  "name": "blur-torch",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Bring ",
+  "main": "index.js",
+  "scripts": {
+    "serve": "cd dist && python3 -m http.server 8002",
+    "build": "cp node_modules/stackblur-canvas/dist/stackblur.min.js* dist/",
+    "deploy-hosting": "firebase deploy",
+    "deploy-hosting-test": "firebase hosting:channel:deploy test"
+  },
+  "author": "Alastair Tse <alastair@liquidx.net>",
+  "dependencies": {
+    "@google-cloud/storage": "^5.8.4",
+    "@google-cloud/vision": "^2.3.6",
+    "commander": "^8.0.0",
+    "stackblur-canvas": "^2.5.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.13.16",
+    "@babel/preset-env": "^7.13.15",
+    "@google-cloud/functions-framework": "^1.7.1",
+    "eslint": "^7.31.0",
+    "fast-crc32c": "^2.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+credentials.json
+credentials-maps.json
+
+# Ignore temp files
+.firebase/
+dist/mock*
+dist/test-cropped*
+.DS_Store

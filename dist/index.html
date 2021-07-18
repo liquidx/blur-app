@@ -1,0 +1,47 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Blur">
+  <meta name="og:title" content="Blur" />
+  <meta name="og:description" content="Blur something quick">
+  <link rel="shortcut icon" href="/icon.png" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/icon.png">
+  <link rel="icon" sizes="170x170" href="/icon.png">
+  <meta name="theme-color" content="#000000">
+  <script src="stackblur.min.js"></script>
+  <script src="blur.js"></script>
+  <link rel="stylesheet" href="blur.css">
+  <title>Blur Quick</title>
+</head>
+
+<body>
+  <div id="page">
+    <div id="canvas-container">
+      <canvas id="canvas"></canvas>
+      <canvas id="overlay"></canvas>
+    </div>
+
+    <footer>
+      <div id="controls">
+        <div>
+          Radius: <input type="range" min="2" max="200" value="100" id="blur-radius">
+          <span id="blur-radius-value"></span>
+        </div>
+        <select id="sources" class="hidden"></select>
+        <button id="action">Load</button>
+      </div>
+    </footer>
+    <div id="offscreen">
+      <input id="file-selector" type="file" accept="image/*;capture=camera" />
+      <img id="offscreen-buffer">
+    </div>
+  </div>
+</body>
+
+</html>
