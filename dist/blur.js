@@ -46,12 +46,12 @@ const getOverlay = () => {
 //
 
 const saveImage = () => {
-  const canvas = document.getElementById("canvas");
-  var link = document.createElement("a");
-  link.download = "blurred.jpg";
-  link.href = canvas.toDataURL("image/jpeg");
-  link.click();
-  link.delete;
+  getCanvas().toBlob((blob) => {
+    let link = document.createElement("a");
+    link.download = "blurred.jpg";
+    link.href = URL.createObjectURL(blob)
+    link.click();
+  }, 'image/jpeg')
 };
 
 /** Translate from screen coordinates (from an event) to canvas coordinates. */
@@ -288,14 +288,7 @@ const filesDidChange = (e) => {
   // Assume there is only one file.
   const file = files[0];
   const offscreen = document.querySelector("#offscreen-buffer");
-  offscreen.file = file;  // just for reference.
-
-  // Read the file
-  const reader = new FileReader();
-  reader.onload = loadEvent => {
-    offscreen.src = loadEvent.target.result;
-  };
-  reader.readAsDataURL(file);
+  offscreen.src = URL.createObjectURL(file);
 }
 
 const offscreenBufferDidUpdate = () => {
