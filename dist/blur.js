@@ -142,7 +142,7 @@ const blur = (touchStartPoint, touchEndPoint) => {
 
   console.log(`Blur at ${topLeft.x}, ${topLeft.y}, ${blurWidth}, ${blurHeight} radius: ${STATE.blurRadius}`)
 
-  const canvas = document.querySelector("canvas");
+  const canvas = getCanvas();
   StackBlur.canvasRGBA(canvas, topLeft.x, topLeft.y, blurWidth, blurHeight, STATE.blurRadius);
 }
 
@@ -152,8 +152,7 @@ const canvasTouchDidStart = (e) => {
   }
   e.preventDefault();
   const touches = e.changedTouches;
-  const canvas = document.querySelector("canvas");
-  const point = mousePointOnCanvas(canvas, touches[0]);
+  const point = mousePointOnCanvas(getCanvas(), touches[0]);
   STATE.touchStartPoint = point;
 }
 
@@ -173,11 +172,44 @@ const canvasTouchDidEnd = (e) => {
   }
   e.preventDefault();
   const touches = e.changedTouches;
-  const canvas = document.querySelector("canvas");
-  const end = mousePointOnCanvas(canvas, touches[0]);
+  const end = mousePointOnCanvas(getCanvas(), touches[0]);
   blur(STATE.touchStartPoint, end);
+  STATE.touchStartPoint = null;
   clearOverlay();
 }
+
+const canvasMouseDown = (e) => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED) {
+    return;
+  }
+  e.preventDefault();
+  const point = mousePointOnCanvas(getCanvas(), e);
+  STATE.touchStartPoint = point;
+}
+
+const canvasMouseMove = (e) => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED || STATE.touchStartPoint == null) {
+    return;
+  }
+  e.preventDefault();
+  const point = mousePointOnCanvas(getCanvas(), e);
+  drawOverlay(STATE.touchStartPoint, point);  
+}
+
+const canvasMouseUp = (e) => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED) {
+    return;
+  }
+  e.preventDefault();
+  const end = mousePointOnCanvas(getCanvas(), e);
+  blur(STATE.touchStartPoint, end);
+  STATE.touchStartPoint = null;
+  clearOverlay();
+}
+
+//
+//
+//
 
 const loadImage = (reload) => {
   const canvas = getCanvas();
@@ -302,6 +334,11 @@ const start = () => {
   canvas.addEventListener("touchstart", canvasTouchDidStart);
   canvas.addEventListener("touchmove", canvasTouchDidMove);
   canvas.addEventListener("touchend", canvasTouchDidEnd)
+
+  canvas.addEventListener("mousedown", canvasMouseDown);
+  canvas.addEventListener("mousemove", canvasMouseMove);
+  canvas.addEventListener("mouseup", canvasMouseUp)
+
 
   // Prevent context menu from showing.
   window.oncontextmenu = function() { return false; }
