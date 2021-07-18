@@ -5,6 +5,8 @@ const APP_STATE_IMAGE_LOADED = 2;
 const STATE = {
   debug: (window.location.hash.indexOf("#debug") != -1),
   appState: APP_STATE_INIT,
+  originalFilename: null,
+  originalFileType: null,
   imageWidth: 0,
   imageHeight: 0,
   blurRadius: 100,
@@ -46,12 +48,14 @@ const getOverlay = () => {
 //
 
 const saveImage = () => {
+  const outputMimeType = STATE.originalFileType || 'image/jpeg';
+  const outputFilename = STATE.originalFilename || "blurred.jpg";
   getCanvas().toBlob((blob) => {
     let link = document.createElement("a");
-    link.download = "blurred.jpg";
+    link.download = outputFilename ;
     link.href = URL.createObjectURL(blob)
     link.click();
-  }, 'image/jpeg')
+  }, outputMimeType)
 };
 
 /** Translate from screen coordinates (from an event) to canvas coordinates. */
@@ -211,6 +215,16 @@ const canvasMouseUp = (e) => {
 //
 //
 
+const handleFiles = (files) => {
+
+  // Assume there is only one file.
+  const file = files[0];
+  STATE.originalFilename = file.name;
+  STATE.originalFileType = file.type;
+  const offscreen = document.querySelector("#offscreen-buffer");
+  offscreen.src = URL.createObjectURL(file);
+}
+
 const loadImage = (reload) => {
   const canvas = getCanvas();
   const overlay = getOverlay();
@@ -284,11 +298,7 @@ const filesDidChange = (e) => {
   if (!files.length) {
     return;
   }
-
-  // Assume there is only one file.
-  const file = files[0];
-  const offscreen = document.querySelector("#offscreen-buffer");
-  offscreen.src = URL.createObjectURL(file);
+  handleFiles(files);
 }
 
 const offscreenBufferDidUpdate = () => {
@@ -300,6 +310,22 @@ const blurRadiusDidChange = (e) => {
   STATE.blurRadius = Math.ceil(parseInt(e.target.value, 10));
   console.log(`Blur: ${STATE.blurRadius}`)
   document.querySelector('#blur-radius-value').innerText = `${STATE.blurRadius}`
+}
+
+const dragEnter = (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+const dragOver = (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+const dragDrop = (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+  handleFiles(e.dataTransfer.files);
 }
 
 //
@@ -332,6 +358,9 @@ const start = () => {
   canvas.addEventListener("mousemove", canvasMouseMove);
   canvas.addEventListener("mouseup", canvasMouseUp)
 
+  document.addEventListener("dragenter", dragEnter, false);
+  document.addEventListener("dragover", dragOver, false);
+  document.addEventListener("drop", dragDrop, false);
 
   // Prevent context menu from showing.
   window.oncontextmenu = function() { return false; }
