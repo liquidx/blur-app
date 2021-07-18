@@ -101,6 +101,11 @@ canvas#overlay {
   z-index: 1000;
 }
 
+button {
+  background: none;
+  border: none;
+}
+
 button#action {
   min-width: 100px;
   padding: 1rem 2rem;
@@ -120,8 +125,88 @@ button#action {
   user-select: none;
 }
 
+
 button#action:active {
   background-position: right center; /* change the direction of the change here */
+}
+
+
+button.control {
+  margin-right: 12px;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--button-text-color);
+  border-radius: 24px;
+}
+
+button.control:active {
+  background-color: var(--button-text-color);
+}
+
+button#radius {
+  margin-right: 0;
+  width: 48px;
+  height: 48px;
+  border: none;
+}
+
+#blur-radius-control {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#blur-radius-value {
+  width: 48px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.control-row {
+  display: flex;
+  flex-direction: row;
+}
+
+/*
+  Custom range slider styling.
+*/
+
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  position: relative;
+  background: transparent; /* Otherwise white in Chrome */
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  background: var(--button-text-color);
+  cursor: pointer;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 20px;
+  cursor: pointer;
+  box-shadow: none;
+  background: none;
+  border-radius: 10px;
+  border: 2px solid var(--button-text-color);
 }
 
 .hidden {

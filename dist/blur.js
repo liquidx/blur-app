@@ -94,12 +94,6 @@ const mousePointOnCanvas = (canvas, e) => {
   return { x: canvasMouseX, y: canvasMouseY, imageX, imageY };
 };
 
-/** Returns the scale at which the canvas is rendered. */
-const canvasRenderScale = () => {
-  const canvas = document.querySelector("canvas");
-  console.log(`parent: ${canvas.parentElement.offsetWidth}x${canvas.parentElement.offsetHeight}`);
-}
-
 const clearCanvas  = () => {
   const canvas = getCanvas();
   const context = canvas.getContext('2d');
@@ -148,59 +142,46 @@ const blur = (touchStartPoint, touchEndPoint) => {
     y: Math.round((start.y < end.y) ? start.y : end.y) 
   };
 
-  console.log(`${topLeft.x}, ${topLeft.y}, ${blurWidth}, ${blurHeight} radius: ${STATE.blurRadius}`)
+  console.log(`Blur at ${topLeft.x}, ${topLeft.y}, ${blurWidth}, ${blurHeight} radius: ${STATE.blurRadius}`)
 
   const canvas = document.querySelector("canvas");
   StackBlur.canvasRGBA(canvas, topLeft.x, topLeft.y, blurWidth, blurHeight, STATE.blurRadius);
 }
 
 const canvasTouchDidStart = (e) => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED) {
+    return;
+  }
   e.preventDefault();
   const touches = e.changedTouches;
-  console.log('touchStart', touches);
-
   const canvas = document.querySelector("canvas");
   const point = mousePointOnCanvas(canvas, touches[0]);
   STATE.touchStartPoint = point;
 }
 
 const canvasTouchDidMove = (e) => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED) {
+    return;
+  }
   e.preventDefault();
   const touches = e.changedTouches;
-  console.log('touchMove', touches);
-
   const point = mousePointOnCanvas(getCanvas(), touches[0]);
   drawOverlay(STATE.touchStartPoint, point);
 }
 
 const canvasTouchDidEnd = (e) => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED) {
+    return;
+  }
   e.preventDefault();
   const touches = e.changedTouches;
-  console.log('touchEnd', touches);
-
   const canvas = document.querySelector("canvas");
   const end = mousePointOnCanvas(canvas, touches[0]);
   blur(STATE.touchStartPoint, end);
   clearOverlay();
 }
 
-const canvasMouseDown = (e) => {
-  e.preventDefault();
-  const canvas = document.querySelector("canvas");
-  const point = mousePointOnCanvas(canvas, e);
-  STATE.touchStartPoint = point;
-  console.log('mouseDown', point);
-};
-
-const canvasMouseUp = (e) => {
-  e.preventDefault();
-  canvasRenderScale();
-  const canvas = document.querySelector("canvas");
-  const end = mousePointOnCanvas(canvas, e);
-  blur(STATE.touchStartPoint, end);
-};
-
-const loadImage = () => {
+const loadImage = (reload) => {
   const canvas = getCanvas();
   const overlay = getOverlay();
   const context = canvas.getContext("2d");
@@ -208,14 +189,14 @@ const loadImage = () => {
 
   STATE.imageWidth = offscreenImage.width;
   STATE.imageHeight = offscreenImage.height;
-  updateBlurRadiusSettings()
+  if (!reload) {
+    updateBlurRadiusSettings()
+  }
 
   canvas.width = offscreenImage.width;
   canvas.height = offscreenImage.height;
   overlay.width = canvas.width;
   overlay.height = canvas.height;
-
-  console.log(`canvas ${canvas.width}x${canvas.height}`)
 
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(offscreenImage, 0, 0, canvas.width, canvas.height);
@@ -255,6 +236,14 @@ const actionButtonDidClick = () => {
       break;
   }
 };
+
+const undoButtonDidClick = () => {
+  if (STATE.appState == APP_STATE_IMAGE_LOADED) {
+    // Reset state.
+    // TODO: Make it a real instead of resetting everything.
+    loadImage(true);
+  }
+}
 
 const filesDidChange = (e) => {
   const files = e.target.files;
@@ -297,14 +286,14 @@ const start = () => {
   const fileSelector = document.querySelector('#file-selector');
   const offscreen = document.querySelector("#offscreen-buffer");
   const blurRadiusControl = document.querySelector('#blur-radius');
+  const undoButton = document.querySelector("#undo");
 
 
   button.addEventListener("click", actionButtonDidClick);
   fileSelector.addEventListener("change", filesDidChange)
   blurRadiusControl.addEventListener("change", blurRadiusDidChange);
   offscreen.addEventListener("load", offscreenBufferDidUpdate)
-  canvas.addEventListener("mousedown", canvasMouseDown);
-  canvas.addEventListener("mouseup", canvasMouseUp);
+  undoButton.addEventListener("click", undoButtonDidClick);
 
   canvas.addEventListener("touchstart", canvasTouchDidStart);
   canvas.addEventListener("touchmove", canvasTouchDidMove);

@@ -4,6 +4,5 @@ credentials-maps.json
 
 # Ignore temp files
 .firebase/
-dist/mock*
-dist/test-cropped*
+dist/stackblur*
 .DS_Store

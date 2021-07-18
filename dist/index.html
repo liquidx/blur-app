@@ -29,9 +29,19 @@
 
     <footer>
       <div id="controls">
-        <div>
-          Radius: <input type="range" min="2" max="200" value="100" id="blur-radius">
-          <span id="blur-radius-value"></span>
+        <div class="control-row">
+          <div>
+            <button id="undo" class="control">
+              <img src="undo_white_24dp.svg" width="24" height="24" />
+            </button>
+          </div>
+          <div id="blur-radius-control">
+            <button id="radius">
+              <img src="straighten_white_24dp.svg" width="24" height="24" />
+            </button>
+            <input type="range" min="2" max="200" value="100" id="blur-radius">
+            <div id="blur-radius-value"></div>
+          </div>
         </div>
         <select id="sources" class="hidden"></select>
         <button id="action">Load</button>
