@@ -14,18 +14,16 @@ const STATE = {
 };
  
 const setState = (newState) => {
-  const button = document.querySelector("button#action");
 
   switch (newState) {
     case APP_STATE_INIT: {
-      button.innerText = "Load";
       clearCanvas();
       clearOverlay();
       clearImageLoader();
       break;
     }
     case APP_STATE_IMAGE_LOADED: {
-      button.innerText = "Save"
+      document.querySelector('button#save').classList.remove('disabled');
       break;
     }
     default:
@@ -220,28 +218,23 @@ const updateBlurRadiusSettings = () => {
 // Capture Button Handler
 //
 
-const actionButtonDidClick = () => {
-  console.log(STATE.appState)
-  switch (STATE.appState) {
-    case APP_STATE_INIT: {
-      document.querySelector('#file-selector').click();
-      if (window.analytics) {
-        window.analytics.logEvent('load_button_clicked')
-      }
-      break;
-    }
-    case APP_STATE_IMAGE_LOADED: {
-      saveImage();
-      if (window.analytics) {
-        window.analytics.logEvent('save_button_clicked')
-      }
-      setState(APP_STATE_INIT);
-      break;
-    }
-    default:
-      break;
+const loadButtonDidClick = () => {
+  clearImageLoader();
+  document.querySelector('#file-selector').click();
+  if (window.analytics) {
+    window.analytics.logEvent('load_button_clicked')
   }
 };
+
+const saveButtonDidClick = () => {
+  if (STATE.appState != APP_STATE_IMAGE_LOADED) {
+    return;
+  }
+  saveImage();
+  if (window.analytics) {
+    window.analytics.logEvent('save_button_clicked')
+  }
+}
 
 const undoButtonDidClick = () => {
   if (STATE.appState == APP_STATE_IMAGE_LOADED) {
@@ -290,7 +283,8 @@ const blurRadiusDidChange = (e) => {
 
 const start = () => {
   console.log('start');
-  const button = document.querySelector("#action");
+  const loadButton = document.querySelector("button#load");
+  const saveButton = document.querySelector("button#save");
   const canvas = document.querySelector("canvas#canvas");
   const fileSelector = document.querySelector('#file-selector');
   const offscreen = document.querySelector("#offscreen-buffer");
@@ -298,7 +292,8 @@ const start = () => {
   const undoButton = document.querySelector("#undo");
 
 
-  button.addEventListener("click", actionButtonDidClick);
+  loadButton.addEventListener("click", loadButtonDidClick);
+  saveButton.addEventListener("click", saveButtonDidClick);
   fileSelector.addEventListener("change", filesDidChange)
   blurRadiusControl.addEventListener("change", blurRadiusDidChange);
   offscreen.addEventListener("load", offscreenBufferDidUpdate)

@@ -8,6 +8,7 @@
   --button-bg-color: rgb(207, 62, 36);
   --button-text-color: rgb(255, 255, 255);
   --button-bg-gradient: linear-gradient(to right, #1A2980 0%, #26D0CE  51%, #1A2980  100%);
+  --button-disabled-bg-gradient: linear-gradient(to right, #6d6d6d 0%, #3a3a3a  51%, #1d1d1d  100%);
 
   --element-bg-color: rgb(22, 22, 22);
   --element-border-color: rgb(33, 33, 33);
@@ -106,7 +107,8 @@ button {
   border: none;
 }
 
-button#action {
+button#load,
+button#save {
   min-width: 100px;
   padding: 1rem 2rem;
   color: var(--button-text-color);
@@ -126,8 +128,13 @@ button#action {
 }
 
 
-button#action:active {
+button#load:active,
+button#save {
   background-position: right center; /* change the direction of the change here */
+}
+
+button#save.disabled {
+  background-image: var(--button-disabled-bg-gradient);
 }
 
 
