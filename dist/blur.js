@@ -55,6 +55,7 @@ const saveImage = () => {
     link.download = outputFilename ;
     link.href = URL.createObjectURL(blob)
     link.click();
+    URL.revokeObjectURL(link.href);
   }, outputMimeType)
 };
 
@@ -216,12 +217,14 @@ const canvasMouseUp = (e) => {
 //
 
 const handleFiles = (files) => {
-
   // Assume there is only one file.
   const file = files[0];
   STATE.originalFilename = file.name;
   STATE.originalFileType = file.type;
   const offscreen = document.querySelector("#offscreen-buffer");
+  if (offscreen.src) {
+    URL.revokeObjectURL(offscreen.src);
+  }
   offscreen.src = URL.createObjectURL(file);
 }
 
