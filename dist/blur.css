@@ -25,6 +25,8 @@
   --page-margin: 10px;
   --animation-duration: 0.5s;
   --animation-timing: ease-in-out;
+
+  --footer-height: 150px;
 }
 
 * {
@@ -50,17 +52,26 @@ body {
 
 #page {
   margin: var(--page-margin) var(--page-margin);
+  /* display: flex;
+  flex-direction: column; */
 }
 
 #canvas-container {
   position: relative;
+  flex-grow: 1;
+  height: calc(100% - var(--footer-height));
+}
+
+footer {
+  flex-grow: 0;
+  height: var(--footer-height);
 }
 
 #canvas {
   z-index: 1;
 
   width: 100%;
-  height: calc(100% - var(--page-margin) * 2);
+  height: 100%;
   object-fit: contain;
 
   transition-duration: var(--animation-duration);
