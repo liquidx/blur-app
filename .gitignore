@@ -1,8 +1,8 @@
+# Build files
 node_modules/
-credentials.json
-credentials-maps.json
+dist/stackblur*
 
 # Ignore temp files
 .firebase/
-dist/stackblur*
 .DS_Store
+firebase-debug.log
