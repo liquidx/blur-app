@@ -14,9 +14,16 @@ const STATE = {
 };
  
 const setState = (newState) => {
-  const button = document.querySelector("button#action")
+  const button = document.querySelector("button#action");
 
   switch (newState) {
+    case APP_STATE_INIT: {
+      button.innerText = "Load";
+      clearCanvas();
+      clearOverlay();
+      clearImageLoader();
+      break;
+    }
     case APP_STATE_IMAGE_LOADED: {
       button.innerText = "Save"
       break;
@@ -93,11 +100,21 @@ const canvasRenderScale = () => {
   console.log(`parent: ${canvas.parentElement.offsetWidth}x${canvas.parentElement.offsetHeight}`);
 }
 
+const clearCanvas  = () => {
+  const canvas = getCanvas();
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 const clearOverlay = () => {
   const overlay = getOverlay();
   const context = overlay.getContext('2d');
   context.clearRect(0, 0, overlay.width, overlay.height);
+}
 
+const clearImageLoader = () => {
+  document.querySelector("#offscreen-buffer").src = "";
+  document.querySelector('#file-selector').value = null;
 }
 
 const drawOverlay = (start, end) => {
@@ -231,6 +248,7 @@ const actionButtonDidClick = () => {
     }
     case APP_STATE_IMAGE_LOADED: {
       saveImage();
+      setState(APP_STATE_INIT);
       break;
     }
     default:
