@@ -175,12 +175,6 @@ button#radius {
   align-items: center;
 }
 
-#blur-radius-value {
-  width: 48px;
-  margin-left: 10px;
-  font-weight: bold;
-}
-
 .control-row {
   display: flex;
   flex-direction: row;

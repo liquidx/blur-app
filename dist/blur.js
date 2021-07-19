@@ -10,8 +10,6 @@ const STATE = {
   imageWidth: 0,
   imageHeight: 0,
   blurRadius: 100,
-  minBlurWidth: 500,
-  minBlurHeight: 300,
   touchStartPoint: null,
 };
  
@@ -268,11 +266,12 @@ const updateBlurRadiusSettings = () => {
     STATE.blurRadius = Math.ceil(Math.min(STATE.imageWidth, STATE.imageHeight) / 30);
     blurRadiusControl.value = STATE.blurRadius;
     // The maximum blur radius cannot be too large.
-    blurRadiusControl.max = Math.ceil(Math.min(STATE.imageWidth, STATE.imageHeight) / 20);
+    STATE.blurRadiusMax = Math.ceil(Math.min(STATE.imageWidth, STATE.imageHeight) / 20);
+    blurRadiusControl.max = STATE.blurRadiusMax;
   } else {
+    STATE.blurRadiusMax = 200;
     STATE.blurRadius = 100;
   }
-  document.querySelector('#blur-radius-value').innerText = `${STATE.blurRadius}`
 }
 
 
@@ -324,8 +323,8 @@ const offscreenBufferDidUpdate = () => {
 
 const blurRadiusDidChange = (e) => {
   STATE.blurRadius = Math.ceil(parseInt(e.target.value, 10));
-  console.log(`Blur: ${STATE.blurRadius}`)
-  document.querySelector('#blur-radius-value').innerText = `${STATE.blurRadius}`
+  const blurRatio = (STATE.blurRadius / STATE.blurRadiusMax) * 1.5 + 0.5;
+  document.querySelector('#radius-symbol').setAttribute('style', `transform: scale(${blurRatio})`);
 }
 
 const dragEnter = (e) => {
