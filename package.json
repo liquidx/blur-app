@@ -1,9 +1,9 @@
 {
-  "name": "blur-torch",
-  "version": "0.1.0",
+  "name": "blur-app",
+  "version": "1.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Bring ",
+  "description": "Blur images quickly",
   "main": "index.js",
   "scripts": {
     "serve": "cd dist && python3 -m http.server 8002",
