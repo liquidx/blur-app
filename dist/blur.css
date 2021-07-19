@@ -109,7 +109,6 @@ canvas#overlay {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 2rem;
   z-index: 1000;
 }
 
@@ -145,6 +144,7 @@ button#save {
 }
 
 button#save.disabled {
+  color: var(--subtitle-text-color);
   background-image: var(--button-disabled-bg-gradient);
 }
 
@@ -162,10 +162,9 @@ button.control:active {
 }
 
 button#radius {
-  margin-right: 0;
+  margin-left: 12px;
   width: 48px;
   height: 48px;
-  border: none;
 }
 
 #blur-radius-control {
@@ -178,6 +177,7 @@ button#radius {
 .control-row {
   display: flex;
   flex-direction: row;
+  margin: 5px 0;
 }
 
 /*
