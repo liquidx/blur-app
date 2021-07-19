@@ -137,18 +137,21 @@ const blur = (touchStartPoint, touchEndPoint) => {
   const end = touchEndPoint;
   const dragDistanceX = Math.ceil(Math.abs(end.x - start.x));
   const dragDistanceY = Math.ceil(Math.abs(end.y - start.y));
-  const blurWidth = Math.ceil(Math.max(dragDistanceX, STATE.minBlurWidth));
-  const blurHeight = Math.ceil(Math.max(dragDistanceY, STATE.minBlurHeight));
+
+  if (dragDistanceX < 3 || dragDistanceY < 3) {
+    return false;
+  }
 
   const topLeft = {
     x: Math.round((start.x < end.x) ? start.x : end.x), 
     y: Math.round((start.y < end.y) ? start.y : end.y) 
   };
 
-  console.log(`Blur at ${topLeft.x}, ${topLeft.y}, ${blurWidth}, ${blurHeight} radius: ${STATE.blurRadius}`)
+  console.log(`Blur at ${topLeft.x}, ${topLeft.y}, ${dragDistanceX}, ${dragDistanceY} radius: ${STATE.blurRadius}`)
 
   const canvas = getCanvas();
-  StackBlur.canvasRGBA(canvas, topLeft.x, topLeft.y, blurWidth, blurHeight, STATE.blurRadius);
+  StackBlur.canvasRGBA(canvas, topLeft.x, topLeft.y, dragDistanceX, dragDistanceY, STATE.blurRadius);
+  return true;
 }
 
 const canvasTouchDidStart = (e) => {
@@ -178,9 +181,14 @@ const canvasTouchDidEnd = (e) => {
   e.preventDefault();
   const touches = e.changedTouches;
   const end = mousePointOnCanvas(getCanvas(), touches[0]);
-  blur(STATE.touchStartPoint, end);
+  const didBlur = blur(STATE.touchStartPoint, end);
+
+  if (!didBlur) {
+    window.alert("Touch and drag to select an area.")
+  }
+
   STATE.touchStartPoint = null;
-  clearOverlay();
+  clearOverlay();  
 }
 
 const canvasMouseDown = (e) => {
@@ -188,8 +196,10 @@ const canvasMouseDown = (e) => {
     return;
   }
   e.preventDefault();
-  const point = mousePointOnCanvas(getCanvas(), e);
-  STATE.touchStartPoint = point;
+  if (STATE.touchStartPoint == null) {
+    const point = mousePointOnCanvas(getCanvas(), e);
+    STATE.touchStartPoint = point;
+  }
 }
 
 const canvasMouseMove = (e) => {
@@ -207,9 +217,12 @@ const canvasMouseUp = (e) => {
   }
   e.preventDefault();
   const end = mousePointOnCanvas(getCanvas(), e);
-  blur(STATE.touchStartPoint, end);
-  STATE.touchStartPoint = null;
-  clearOverlay();
+  const didBlur = blur(STATE.touchStartPoint, end);
+  if (didBlur) {
+    console.log('didblur');
+    STATE.touchStartPoint = null;
+    clearOverlay();  
+  }
 }
 
 //
