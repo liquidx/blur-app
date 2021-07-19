@@ -23,6 +23,7 @@ const setState = (newState) => {
       break;
     }
     case APP_STATE_IMAGE_LOADED: {
+      document.querySelector('#introduction').style = 'display: none;';
       document.querySelector('button#save').classList.remove('disabled');
       break;
     }
